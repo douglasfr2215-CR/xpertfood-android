@@ -8,9 +8,12 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import java.util.Locale;
 
 public class OfferCaptureAccessibilityService extends AccessibilityService {
+    private static OfferCaptureAccessibilityService activeService;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private String activePackage = "";
     private final Runnable capture = () -> captureOffer(activePackage);
+    public static OfferCaptureAccessibilityService getActiveService() { return activeService; }
+    @Override protected void onServiceConnected() { super.onServiceConnected(); activeService = this; }
     @Override public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event == null || event.getPackageName() == null) return;
         activePackage = event.getPackageName().toString();
@@ -36,4 +39,5 @@ public class OfferCaptureAccessibilityService extends AccessibilityService {
         for(int i=0;i<n.getChildCount();i++)collect(n.getChild(i),out,depth+1);
     }
     @Override public void onInterrupt(){handler.removeCallbacks(capture);LiveOfferAnalyzer.dismissOverlay();}
+    @Override public void onDestroy(){if(activeService==this)activeService=null;handler.removeCallbacks(capture);LiveOfferAnalyzer.dismissOverlay();super.onDestroy();}
 }
