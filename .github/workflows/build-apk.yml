@@ -21,11 +21,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Instalar plataforma Android 35
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Confirmar Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -f "$ANDROID_HOME/platforms/android-35/android.jar"
 
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
