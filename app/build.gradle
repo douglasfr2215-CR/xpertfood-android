@@ -4,11 +4,20 @@ android {
     namespace 'br.com.xpertfood'
     compileSdk 35
 
+    signingConfigs {
+        debug {
+            storeFile file('xpertfood-dev.keystore')
+            storePassword 'xpertfood-dev-2026'
+            keyAlias 'xpertfood'
+            keyPassword 'xpertfood-dev-2026'
+        }
+    }
+
     defaultConfig {
         applicationId 'br.com.xpertfood'
         minSdk 24
         targetSdk 35
-        versionCode 3
-        versionName '1.0.2'
+        versionCode 4
+        versionName '1.0.3'
     }
 }

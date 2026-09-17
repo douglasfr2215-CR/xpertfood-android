@@ -2,7 +2,6 @@ package br.com.xpertfood;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.Manifest;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +20,6 @@ public class MainActivity extends Activity {
     private String pendingCsv;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != getPackageManager().PERMISSION_GRANTED)
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 98);
         web = new WebView(this); setContentView(web);
         WebSettings s = web.getSettings(); s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setAllowFileAccess(true);
         web.setWebViewClient(new WebViewClient()); web.setWebChromeClient(new WebChromeClient());
@@ -53,7 +50,6 @@ public class MainActivity extends Activity {
         }
     }
     public class Bridge {
-        @JavascriptInterface public void openNotificationAccess() { runOnUiThread(() -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))); }
         @JavascriptInterface public void openAccessibility() { runOnUiThread(() -> startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))); }
         @JavascriptInterface public void openOverlayAccess() { runOnUiThread(() -> {
             if (Build.VERSION.SDK_INT >= 23) startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));

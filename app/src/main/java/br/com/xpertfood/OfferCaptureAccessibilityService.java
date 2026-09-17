@@ -12,6 +12,7 @@ public class OfferCaptureAccessibilityService extends AccessibilityService {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private String activePackage = "";
     private final Runnable capture = () -> captureOffer(activePackage);
+    private final Runnable finishOffer = LiveOfferAnalyzer::endActiveOffer;
     public static OfferCaptureAccessibilityService getActiveService() { return activeService; }
     @Override protected void onServiceConnected() { super.onServiceConnected(); activeService = this; }
     @Override public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -28,8 +29,13 @@ public class OfferCaptureAccessibilityService extends AccessibilityService {
         boolean money = low.contains("r$") || low.matches(".*\\b\\d+[,.]\\d{2}\\b.*");
         boolean distance = low.contains(" km") || low.contains("quilômetro");
         boolean ride = low.contains("coleta") || low.contains("entrega") || low.contains("pedido") || low.contains("aceitar") || low.contains("ifood");
-        if (money && distance && ride) LiveOfferAnalyzer.analyzeAndShow(this, raw, "tela:" + sourcePackage);
-        else LiveOfferAnalyzer.dismissOverlay();
+        if (money && distance && ride) {
+            handler.removeCallbacks(finishOffer);
+            LiveOfferAnalyzer.analyzeAndShow(this, raw, "tela:" + sourcePackage);
+        } else {
+            handler.removeCallbacks(finishOffer);
+            handler.postDelayed(finishOffer, 1500);
+        }
     }
     private void collect(AccessibilityNodeInfo n, StringBuilder out, int depth) {
         if (n == null || depth > 30 || out.length() > 7000) return;
@@ -38,6 +44,6 @@ public class OfferCaptureAccessibilityService extends AccessibilityService {
         if(d!=null&&d.length()>0&&!d.equals(t))out.append(d).append(" • ");
         for(int i=0;i<n.getChildCount();i++)collect(n.getChild(i),out,depth+1);
     }
-    @Override public void onInterrupt(){handler.removeCallbacks(capture);LiveOfferAnalyzer.dismissOverlay();}
-    @Override public void onDestroy(){if(activeService==this)activeService=null;handler.removeCallbacks(capture);LiveOfferAnalyzer.dismissOverlay();super.onDestroy();}
+    @Override public void onInterrupt(){handler.removeCallbacks(capture);handler.removeCallbacks(finishOffer);LiveOfferAnalyzer.endActiveOffer();}
+    @Override public void onDestroy(){if(activeService==this)activeService=null;handler.removeCallbacks(capture);handler.removeCallbacks(finishOffer);LiveOfferAnalyzer.endActiveOffer();super.onDestroy();}
 }
