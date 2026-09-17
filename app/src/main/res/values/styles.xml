@@ -1,0 +1,8 @@
+<resources>
+    <string name="accessibility_description">Lê informações visíveis de ofertas do iFood para calcular rentabilidade. Não toca nem aceita pedidos.</string>
+    <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item><item name="android:colorAccent">#EA1D2C</item>
+        <item name="android:navigationBarColor">#090B10</item><item name="android:statusBarColor">#090B10</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
