@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void openOverlayAccess() { runOnUiThread(() -> {
             if (Build.VERSION.SDK_INT >= 23) startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
         }); }
-        @JavascriptInterface public void testLiveMonitor() { LiveOfferAnalyzer.analyzeAndShow(MainActivity.this, "iFood • R$ 7,50 • 1,0 km até coleta • 4,0 km entrega • 20 min", "teste"); }
+        @JavascriptInterface public void testLiveMonitor() { LiveOfferAnalyzer.analyzeAndShow(MainActivity.this, "iFood • Restaurante: Lanchonete Central • Endereço: Rua Adolfo Olinto, 120 • R$ 7,50 • 1,0 km até coleta • 4,0 km entrega • 20 min", "teste"); }
         @JavascriptInterface public void shareCsv(String csv) { runOnUiThread(() -> {
             try {
                 pendingCsv = csv;

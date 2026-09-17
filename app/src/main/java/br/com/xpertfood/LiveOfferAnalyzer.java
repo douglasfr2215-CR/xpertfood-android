@@ -3,7 +3,6 @@ package br.com.xpertfood;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -40,7 +39,7 @@ public final class LiveOfferAnalyzer {
         double rpkm=total>0?fare/total:0,rph=mins>0?fare*60/mins:0; String verdict=rpkm>=1.10&&rph>=22.50?"aceitar":rpkm>=.90?"avaliar":"recusar";
         if(fare<=0||total<=0)return;
         String label=verdict.toUpperCase(Locale.ROOT); String detail=String.format(Locale.forLanguageTag("pt-BR"),"R$ %.2f/km • %.1f km efetivos%s",rpkm,total,mins>0?String.format(Locale.forLanguageTag("pt-BR")," • R$ %.2f/h",rph):"");
-        try{JSONObject o=new JSONObject().put("signature",sig).put("source",source).put("fare",fare).put("pickupKm",pickup).put("tripKm",trip).put("totalKm",total).put("mins",mins).put("rpkm",rpkm).put("rph",rph).put("verdict",verdict);queue(p,o);}catch(Exception ignored){}
+        try{JSONObject o=new JSONObject().put("signature",sig).put("source",source).put("rawText",raw).put("fare",fare).put("pickupKm",pickup).put("tripKm",trip).put("totalKm",total).put("mins",mins).put("rpkm",rpkm).put("rph",rph).put("verdict",verdict);queue(p,o);}catch(Exception ignored){}
         int seconds=(int)first(SECONDS,raw); long popupMs=(seconds>=5&&seconds<=90?seconds:90)*1000L;
         notify(c,label,detail,verdict); overlay(c,label,detail,verdict,popupMs);
     }
